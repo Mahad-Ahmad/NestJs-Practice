@@ -65,8 +65,6 @@ export class UsersService {
   }
 
   updateUser(id: number, updateUserDto: UpdateUserDto) {
-    console.log(id, updateUserDto);
-
     this.users = this.users.map((el) => {
       if (el.id == id) {
         return { ...el, ...updateUserDto };

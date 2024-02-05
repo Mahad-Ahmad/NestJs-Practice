@@ -7,7 +7,13 @@ import {
   Param,
   Delete,
   Query,
+  ValidationPipe,
+  ParseArrayPipe,
+  ParseIntPipe,
+  NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 import { UsersService } from './users.service';
@@ -16,7 +22,8 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto) {
+  @UseGuards(AuthGuard)
+  createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
 
@@ -26,17 +33,25 @@ export class UsersController {
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string) {
-    return this.usersService.getUser(+id);
+  getUser(@Param('id', ParseIntPipe) id: number) {
+    try {
+      return this.usersService.getUser(id);
+    } catch (error) {
+      throw new NotFoundException();
+    }
   }
 
   @Patch(':id')
-  updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateUser(+id, updateUserDto);
+  @UseGuards(AuthGuard)
+  updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.updateUser(id, updateUserDto);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: string) {
-    return this.usersService.deleteUser(+id);
+  deleteUser(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.deleteUser(id);
   }
 }
