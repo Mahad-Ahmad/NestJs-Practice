@@ -41,11 +41,13 @@ export class UsersService {
       admin: 'false',
     },
   ];
-
   getUsers(admin: 'true' | 'false') {
+    console.log(process.env.TEST);
+    
     if (admin) return this.users.filter((el) => el.admin == admin);
     return this.users;
   }
+
 
   getUser(id: number) {
     const user = this.users.find((el) => el.id == id);

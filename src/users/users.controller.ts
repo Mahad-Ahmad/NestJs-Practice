@@ -8,7 +8,6 @@ import {
   Delete,
   Query,
   ValidationPipe,
-  ParseArrayPipe,
   ParseIntPipe,
   NotFoundException,
   UseGuards,
@@ -17,6 +16,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 import { UsersService } from './users.service';
+
 
 @Controller('users')
 export class UsersController {
